@@ -1,0 +1,44 @@
+{
+    "name": "emma/framework",
+    "description": "A PHP 8.0+ Attributes based Framework. Supports for both MVC and Middle Architecture. Comes with Attribute based http routing, Attributes based Di Container, Attributes based ORM, and Attributes based Entity/DTO/Object validations.",
+    "authors": [
+        {
+            "name": "Ademola Aina",
+            "email" : "debascoguy@gmail.com",
+            "homepage": "https://github.com/debascoguy/Emma-Framework",
+            "role": "Founder/Lead Software Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "emma/common": "^1.1.4",
+        "emma/di": "^1.2.4",
+		"emma/dbal": "^1.0.1",
+		"emma/orm": "^1.0.1",
+		"emma/http-manager": "^1.0.3",
+		"emma/security": "^1.0.0",
+		"emma/validation": "^1.0.2",
+		"emma/internationalization": "^1.0.1",
+		"emma/searchengine": "^2.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+			"Emma\\": "Src/",
+            "Emma\\App\\": "Src/",
+			"Emma\\Console\\": "Src/"
+        }
+    },
+    "require-dev": {
+		"php": ">=8.2",
+        "emma/common": "^1.1.4",
+        "emma/di": "^1.2.4",
+		"emma/dbal": "^1.0.1",
+		"emma/orm": "^1.0.1",
+		"emma/http-manager": "^1.0.3",
+		"emma/security": "^1.0.0",
+		"emma/validation": "^1.0.2",
+		"emma/internationalization": "^1.0.1",
+		"emma/searchengine": "^2.0.2"
+	},
+    "license": "GPL-2.0-only"
+}
