@@ -40,6 +40,7 @@ class Config
         $this->csrfParamName = $this->appConfig["csrfParamName"] ?? "csrf_token";
         $this->language = $this->appConfig["language"] ?? "en-US";
         $this->charset = $this->appConfig["charset"] ?? "UTF-8";
+        $this->appConfig["plugins"] = (array) include __DIR__ . DIRECTORY_SEPARATOR . "ServiceManager" . DIRECTORY_SEPARATOR . "plugins.php";
     }
     
     /**

@@ -146,7 +146,7 @@ abstract class AbstractErrorHandler implements EventHandlerInterface
 
             echo "<div style='font-size: 16px; line-height: 2px; border: 3px solid #f2f246; padding: 25px; background-color: #d9d979; '>";
 
-            if (@file_exists($errorFile) && $handle = fopen($errorFile, "r")) {
+            if (@\file_exists($errorFile) && $handle = fopen($errorFile, "r")) {
                 $line_number = 1;
                 while (($lineString = fgets($handle, 4096)) !== false) {
                     $lineString = htmlspecialchars($lineString);
@@ -175,7 +175,7 @@ abstract class AbstractErrorHandler implements EventHandlerInterface
         $code = $exception->getCode();
         $message = $exception->getMessage();
         $line = $exception->getLine();
-        $this->displayError($code, $message, $file, $line, null);
+        $this->displayError($code, $message, $file, $line);
     }
 
     /**

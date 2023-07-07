@@ -18,7 +18,7 @@ abstract class AbstractService
      * @var RequestInterface
      */
     #[Inject(name: RequestFactory::class)]
-    protected RequestInterface $request;
+    protected ?RequestInterface $request = null;
 
     /**
      * @return RequestInterface

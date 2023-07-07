@@ -12,7 +12,7 @@ return [
     "ini_set" => [
         "log_errors" => 1,
         //If only directory is supplied, Then, we can use the log-style File naming below.
-        "error_log" => dirname(__FILE__) . DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR,
+        "error_log" => __DIR__ . DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR,
         "upload-max-filesize" => "10M",
         "post_max_size" => "10M",
     ],

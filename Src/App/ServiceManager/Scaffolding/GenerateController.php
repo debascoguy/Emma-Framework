@@ -67,7 +67,7 @@ class GenerateController extends File
 
         $injectRequest  = $tab . "/**" . $newLineTab . " * @var RequestInterface" . $newLineTab . " */";
         $injectRequest .= $newLineTab . "#[Inject(name: RequestFactory::class)]";
-        $injectRequest .= $newLineTab . "protected RequestInterface \$requestFactory;" . $newLine;
+        $injectRequest .= $newLineTab . "protected ?RequestInterface \$requestFactory = null;" . $newLine;
         fwrite($indexControllerFile, $injectRequest);
 
         $comment = $newLineTab . "/**" . $newLineTab . " * @return Render" . $newLineTab . " */";
