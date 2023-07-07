@@ -29,9 +29,7 @@ class Boot
         /** @var RouteRegistry $registry */
         $registry = $container->get(RouteRegistry::class);
         $registry->setRoutables(
-            (array) include dirname(__DIR__, 2)
-                . DIRECTORY_SEPARATOR
-                . "Emma"
+            (array) include Config::getFrameworkBaseRoute()
                 . DIRECTORY_SEPARATOR
                 . "config"
                 . DIRECTORY_SEPARATOR
