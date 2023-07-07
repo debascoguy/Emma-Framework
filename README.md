@@ -1,5 +1,5 @@
 # Emma Framework
-A PHP 8.0+ Attributes based Framework. Supports for both MVC and Middle Architecture. Comes with Attribute based http routing, Attributes based Di Container, Attributes based ORM, and Attributes based Entity/DTO/Object validations.
+A PHP 8.0+ Attributes based Framework. Supports for both MVC and Middleware Architecture. Comes with Attribute based http routing, Attributes based Di Container, Attributes based ORM, and Attributes based Entity/DTO/Object validations.
 
 See:
 
