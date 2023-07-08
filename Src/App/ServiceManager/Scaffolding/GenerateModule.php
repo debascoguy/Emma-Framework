@@ -2,6 +2,7 @@
 
 namespace Emma\App\ServiceManager\Scaffolding;
 
+use Emma\App\Config;
 use Emma\Common\Utils\File;
 
 /**
@@ -39,18 +40,18 @@ class GenerateModule extends File {
     protected ?InstantiateModule $generateModules = null;
 
     /**
-     * @param string $newModuleName
+     * @param string $moduleName
      * @param string $controllerName
      * @param string $serviceName
      */
     public function __construct(
-        protected string $newModuleName = "index",
-        protected string $controllerName = "index",
-        protected string $serviceName = "index")
-    {
-        $baseDirectory = dirname(__DIR__, 4);
-        $this->generateModules = new InstantiateModule($baseDirectory);
-        $this->setNewModuleDirectory($this->generateModules->generate($newModuleName));
+        protected string $namespace = "MyFirstApp",
+        protected string $moduleName = "index",
+        protected ?string $controllerName = "index",
+        protected ?string $serviceName = "index"
+    ) {
+        $this->generateModules = new InstantiateModule(Config::getFrameworkBaseRoute());
+        $this->setNewModuleDirectory($this->generateModules->generate($moduleName));
         $this->modulesDirectory = $this->generateModules->getBaseModule();
     }
 
@@ -65,6 +66,11 @@ class GenerateModule extends File {
         if ($this->isGenerateController()) {
             if (!is_dir($modulePath)) {
                 echo "Invalid Module Name - $modulePath - Module Does Not Exist!";
+                return false;
+            }
+
+            if (is_null($this->controllerName)) {
+                echo "Controller Name - Cannot Be NULL!";
                 return false;
             }
 
@@ -84,12 +90,17 @@ class GenerateModule extends File {
                 return false;
             }
 
+            if (is_null($this->serviceName)) {
+                echo "Service Name - Cannot Be NULL!";
+                return false;
+            }
+
             $servicePath = $modulePath
                 . DIRECTORY_SEPARATOR . "Model"
                 . DIRECTORY_SEPARATOR."Services"
                 . DIRECTORY_SEPARATOR . $this->serviceName."Service.php";
             if (!$this->isAllowOverride() && file_exists($servicePath)) {
-                echo "Controller Exist and Override is Not Allowed!";
+                echo "Service Exist and Override is Not Allowed!";
                 return false;
             }
             echo "\nService File: " . $this->generateModelService();
@@ -104,7 +115,7 @@ class GenerateModule extends File {
      */
     public function generateModelService(): string
     {
-        return (new GenerateService($this->newModuleDirectory))->generate($this->serviceName);
+        return (new GenerateService($this->newModuleDirectory))->generate($this->namespace, $this->serviceName);
     }
 
     /**
@@ -113,7 +124,7 @@ class GenerateModule extends File {
      */
     public function generateController(): string
     {
-        return (new GenerateController($this->newModuleDirectory))->generateController($this->controllerName);
+        return (new GenerateController($this->newModuleDirectory))->generate($this->namespace, $this->controllerName);
     }
 
     /**

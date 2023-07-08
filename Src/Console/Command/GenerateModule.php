@@ -16,6 +16,7 @@ class GenerateModule extends AbstractCommand
         $parametersBags = $this->getParameters();
 
         $GenerateModule = new \Emma\App\ServiceManager\Scaffolding\GenerateModule(
+            $parametersBags["namespace"],
             $parametersBags["module"],
             !empty($parametersBags["controller"]) ? $parametersBags["controller"] : null,
             !empty($parametersBags["service"]) ? $parametersBags["service"] : null,
@@ -34,9 +35,9 @@ class GenerateModule extends AbstractCommand
     public function help(): string
     {
         $message = "\nHOW TO USE EXAMPLE: \n";
-        $message .= "> php -f Emma/Console/console.php run:generate-module module:[moduleName]\n";
+        $message .= "> php -f vendor/emma/framework/Src/Console/console.php run:generate-module module:[moduleName] namespace:[namespace]\n";
         $message .= "EXAMPLE USING PARAMETER(S):\n";
-        $message .= "> php -f Emma/Console/console.php run:generate-module module:index\n";
+        $message .= "> php -f vendor/emma/framework/Src/Console/console.php run:generate-module module:index namespace:MyFirstApp\n";
 
         return $message;
     }

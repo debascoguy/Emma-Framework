@@ -146,7 +146,7 @@ class App
     /**
      * @return PDOConnection
      */
-    public function getConnection(): PDOConnection
+    public function getConnection(): ?PDOConnection
     {
         return $this->connection;
     }

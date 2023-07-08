@@ -36,13 +36,8 @@ return [
 
     ],
 
-    "modules_config" => [
-
-    ],
-
     "controllers.registry" => (array)include __DIR__ . DIRECTORY_SEPARATOR . "controllers.registry.php",
     "database_config" => (array)include __DIR__ . DIRECTORY_SEPARATOR . "db.config.php",
-    "plugins" => (array) include dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "emma/app/plugins.php",
     "session_timeout" => 3600,
     "session_exempt" => [
 

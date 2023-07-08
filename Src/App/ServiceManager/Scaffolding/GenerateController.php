@@ -31,9 +31,10 @@ class GenerateController extends File
      * @param string $controllerName
      * @return string
      */
-    public function generateController(string $controllerName = "Index")
+    public function generate(string $namespace, string $controllerName)
     {
         $moduleName = basename($this->moduleDirectory);
+        $namespace = StringManagement::underscoreToCamelCase($namespace, true);
         $moduleName = StringManagement::underscoreToCamelCase($moduleName, true);
         $controllerName = StringManagement::underscoreToCamelCase($controllerName, true);
         $controllersDirectory = $this->moduleDirectory . DIRECTORY_SEPARATOR . "Controller";
@@ -48,7 +49,7 @@ class GenerateController extends File
         $controllerPath = $controllersDirectory . DIRECTORY_SEPARATOR . "{$controllerName}Controller.php";
         $indexControllerFile = fopen($controllerPath, "w");
         fwrite($indexControllerFile, "<?php" . $endOfLine . $newLine);
-        fwrite($indexControllerFile, "namespace Emma\\Modules\\$moduleName\\Controller;" . $endOfLine . $newLine);
+        fwrite($indexControllerFile, "namespace $namespace\\Modules\\$moduleName\\Controller;" . $endOfLine . $newLine);
 
         fwrite($indexControllerFile, "use " . BaseController::class . "; " . $endOfLine);
         fwrite($indexControllerFile, "use " . Method::class . "; " . $endOfLine);

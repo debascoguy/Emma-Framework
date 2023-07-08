@@ -43,7 +43,11 @@ class RunCommand implements RunInterface
                 echo $consoleCommand->help();
                 exit();
             }
-            $consoleCommand->setConnection($this->getApp()->getConnection());
+
+            $conn = $this->getApp()->getConnection();
+            if (!is_null($conn)) {
+                $consoleCommand->setConnection($conn);
+            }
             $consoleCommand->setParameters($parameterBags);
             $consoleCommand->run();
             return true;

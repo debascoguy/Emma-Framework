@@ -23,11 +23,12 @@ class GenerateService extends File
      * @return string
      * @throws \Exception
      */
-    public function generate(string $serviceName)
+    public function generate(string $namespace, string $serviceName)
     {
         if (empty($serviceName)) {
             throw new \Exception("Error 404 : Service Name Not Found - InvalidService Name Passed For Generate Service!");
         }
+        $namespace = StringManagement::underscoreToCamelCase($namespace, true);
         $serviceName = StringManagement::underscoreToCamelCase($serviceName, true);
         $moduleName = basename($this->moduleDirectory);
         $sampleServicePath = $this->moduleDirectory . DIRECTORY_SEPARATOR . "/Model/Services/{$serviceName}Service.php";
@@ -36,7 +37,7 @@ class GenerateService extends File
 
         $sampleServiceFile = fopen($sampleServicePath, "w");
         fwrite($sampleServiceFile, "<?php" . $endOfLine . $newLine);
-        fwrite($sampleServiceFile, "namespace Emma\\Modules\\$moduleName\\Model\\Services;" .  $endOfLine . $newLine);
+        fwrite($sampleServiceFile, "namespace $namespace\\Modules\\$moduleName\\Model\\Services;" .  $endOfLine . $newLine);
         fwrite($sampleServiceFile, "use " . AbstractService::class . ";" . $endOfLine . $newLine);
         fwrite($sampleServiceFile, "class {$serviceName}Service extends AbstractService " . $newLine . "{" . $endOfLine);
         fwrite($sampleServiceFile, $newLine . "}");
