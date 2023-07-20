@@ -60,7 +60,9 @@ class ExceptionHandlerScheduler extends AbstractErrorHandler
                 unset($backtrace[0]);
                 $msg = [];
                 foreach ($backtrace as $error) {
-                    $msg[] = "<b>Error in file:</b> {$error['file']}  <b>[Line #:{$error['line']}]</b>\n"
+                    $file = $error['file'] ?? '';
+                    $line = $error['line'] ?? '';
+                    $msg[] = "<b>Error in file:</b> {$file}  <b>[Line #:{$line}]</b>\n"
                         . "<b>Function:</b> {$error['function']}";
                 }
                 error_log(implode("\n", $msg));
