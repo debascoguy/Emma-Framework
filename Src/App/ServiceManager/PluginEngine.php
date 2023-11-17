@@ -3,8 +3,10 @@
 namespace Emma\App\ServiceManager;
 
 use Emma\App\Constants;
+use Emma\App\Controller\BaseController;
 use Emma\App\Controller\Plugin\ControllerPlugin;
 use Emma\App\View\HelperPlugin\BaseViewHelper;
+use Emma\App\View\Service\Template;
 use Emma\Common\CallBackHandler\CallBackHandler;
 use Emma\Di\Container\ContainerManager;
 
@@ -30,7 +32,13 @@ trait PluginEngine
     {
         if (empty($this->plugins)) {
             $configs = $this->getContainer()->get(Constants::CONFIG);
-            $this->plugins = $configs->appConfig["plugins"][$this->sector];
+            if ($this instanceof BaseController) {
+                $this->plugins = $configs->appConfig["plugins"]["controller"];
+            } else if ($this instanceof Template) {
+                $this->plugins = $configs->appConfig["plugins"]["view"];
+            } else {
+                $this->plugins = $configs->appConfig["plugins"];
+            }
         }
 
         return $this->get($methodName, $arguments);
@@ -101,7 +109,7 @@ trait PluginEngine
             throw new \Exception(sprintf('Plugin of type %s is invalid', (is_object($plugin) ? get_class($plugin) : gettype($plugin))));
         }
 
-        if ($this->sector == "controller") {
+        if ($this instanceof BaseController) {
             if (!method_exists($plugin, 'setController')) {
                 return;
             }
@@ -111,7 +119,7 @@ trait PluginEngine
             $plugin->setController($this);
         }
 
-        if ($this->sector == "view") {
+        if ($this instanceof Template) {
             if (!method_exists($plugin, 'setViewEngine')) {
                 return;
             }
@@ -134,24 +142,6 @@ trait PluginEngine
     public function register($name, $helper)
     {
         $this->plugins[$name] = $helper;
-        return $this;
-    }
-
-
-    /**
-     * @return string
-     */ 
-    public function getSector()
-    {
-        return $this->sector;
-    }
-
-    /**
-     * @return self
-     */ 
-    public function setSector(string $sector)
-    {
-        $this->sector = $sector;
         return $this;
     }
 }

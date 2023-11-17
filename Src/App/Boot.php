@@ -4,10 +4,8 @@ namespace Emma\App;
 
 use Emma\App\Connection\DbConnection;
 use Emma\App\ErrorHandler\ErrorHandlerScheduler;
-use Emma\App\ErrorHandler\Exception\Exception404;
 use Emma\App\ErrorHandler\ExceptionHandlerScheduler;
 use Emma\App\ErrorHandler\ShutDownHandlerScheduler;
-use Emma\App\ServiceManager\MvcEventManager;
 use Emma\Di\Container\Container;
 use Emma\Http\HttpManager;
 use Emma\Http\RouteRegistry;
@@ -45,10 +43,9 @@ class Boot
         $container->get(ShutDownHandlerScheduler::class);
         $core->setHttpManager($container->get(HttpManager::class));
         $core->setConfig($container->get(Config::class));
-        $core->setEventManager($container->get(MvcEventManager::class));
         $core->setContainer($container);
-        self::initiateSystemConfig($core);
         $core->getHttpManager()->boot();
+        self::initiateSystemConfig($core);
     }
 
     /**
@@ -61,13 +58,21 @@ class Boot
         $modulesConfig = $configs->appConfig;
 
         $iniSet = $modulesConfig["ini_set"];
-        if (is_dir($iniSet["error_log"])){
+        if (is_dir($iniSet["error_log"])) {
             $iniSet["error_log"] = Log::getLogFileName($modulesConfig["logStyle"], $iniSet["error_log"]);
         }
         foreach($iniSet as $key => $value) {
             ini_set($key, $value);
         }
-        
+
+        $allowedOrigins = $modulesConfig["allowed_origin"];
+        $request = $core->getContainer()->get(Constants::REQUEST);
+        $requestOrigin = $request->getServer()->get("HTTP_ORIGIN", "*");
+        if (empty($allowedOrigins) || in_array($requestOrigin, $allowedOrigins)) {
+            $request->setHeader("Access-Control-Allow-Origin", $requestOrigin);
+            $request->setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+            $request->setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token, Authorization, Cache-Control, X-Requested-With");
+        }                
         return true;
     }
 
@@ -82,8 +87,6 @@ class Boot
         $container = $core->getContainer();
         if (!empty($routeMatch) && $routeMatch->isFound()) {
             $container->register(Constants::ROUTES, $routeMatch);
-        } else {
-            throw new Exception404("Route Not Found!");
         }
 
         DbConnection::getInstance()->connect([]);

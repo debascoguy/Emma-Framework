@@ -36,26 +36,6 @@ class RestController extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $allowedOrigins = Config::getInstance()->appConfig["allowed_origin"];
-        $requestOrigin = $this->getRequest()->getServer()->get("HTTP_ORIGIN", "localhost:4400");
-        $checkOrigin = str_replace(['https://', 'http://'], '', $requestOrigin);
-        $http_origin = in_array($checkOrigin, $allowedOrigins) ? $requestOrigin : "localhost:4400";
-        $header = [
-            "Access-Control-Allow-Origin" => $http_origin,
-            "Access-Control-Allow-Methods" => "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers" => "Origin, Content-Type, X-Auth-Token, Authorization, Cache-Control, X-Requested-With"
-        ];
-        foreach($header as $key => $value) {
-            $this->request->setHeader($key, $value);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function authorization(): bool
-    {
-        return parent::authorization();
     }
 
     /**
@@ -103,7 +83,7 @@ class RestController extends BaseController
     public function createSession(): ResponseInterface
     {
         $csrfSession = Token::generateCookie();
-        return $this->restResponse(["session"=>$csrfSession]);
+        return $this->restResponse(["session" => $csrfSession]);
     }
 
     /**

@@ -10,10 +10,10 @@ use Emma\App\Controller\Plugin\Render;
 use Emma\App\Controller\Plugin\ResponseCode;
 use Emma\App\Controller\Plugin\Template;
 use Emma\App\Controller\Plugin\Url;
-use Emma\App\ServiceManager\MvcEventManager;
+use Emma\App\ServiceManager\HttpInterceptors\AuthorizationInterceptorService;
+use Emma\App\ServiceManager\HttpInterceptors\HttpInterceptorManager;
 use Emma\App\ServiceManager\PluginEngine;
 use Emma\Di\Container\ContainerManager;
-use Emma\Http\HttpStatus;
 use Emma\Http\Request\Request;
 use Emma\Http\Request\RequestInterface;
 use Emma\Http\Response\ResponseInterface;
@@ -35,7 +35,7 @@ use Emma\Http\Response\ResponseInterface;
  */
 abstract class BaseController {
 
-    use ContainerManager, PluginEngine;
+    use ContainerManager, PluginEngine, HttpInterceptorManager;
 
     /**
      * @var Request
@@ -47,32 +47,12 @@ abstract class BaseController {
      */
     protected ResponseInterface $response;
 
-    /**
-     * @var MvcEventManager|null
-     */
-    protected ?MvcEventManager $mvcEventManager = null;
-
 
     public function __construct() 
     {
-        $this->setSector("controller");
         $this->setRequest($this->getContainer()->get(Constants::REQUEST));
         $this->setResponse($this->getContainer()->get(Constants::RESPONSE));
-        $this->setMvcEventManager($this->getContainer()->get(Constants::EVENT_MANAGER));
-        $this->getMvcEventManager()->registerPreActionEvent([$this, "authorization"]);
-    }
-
-    /**
-     * @return bool
-     */
-    public function authorization(): bool
-    {
-        /**
-         * If REQUEST is Authorized; => set response code(200) and return [json|view|true] --> (optional)
-         * Otherwise, invoke $this->getEventManager()->stop() and set response code(405) and return [json|view|false].
-         */
-        $this->responseCode(HttpStatus::HTTP_OK);
-        return true;
+        $this->addInterceptor($this->getContainer()->get(AuthorizationInterceptorService::class));
     }
 
     /**
@@ -108,24 +88,6 @@ abstract class BaseController {
     public function setResponse(ResponseInterface $response): static
     {
         $this->response = $response;
-        return $this;
-    }
-
-    /**
-     * @return  MvcEventManager
-     */ 
-    public function getMvcEventManager(): MvcEventManager
-    {
-        return $this->mvcEventManager;
-    }
-
-    /**
-     * @param MvcEventManager  $mvcEventManager
-     * @return $this
-     */ 
-    public function setMvcEventManager(MvcEventManager $mvcEventManager): static
-    {
-        $this->mvcEventManager = $mvcEventManager;
         return $this;
     }
 }

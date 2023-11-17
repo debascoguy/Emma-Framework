@@ -1,24 +1,24 @@
 <?php
 namespace Emma\App;
 
-use Emma\App\ServiceManager\MvcEventManager;
+use Emma\App\ServiceManager\HttpInterceptors\HttpInterceptorInterface;
+use Emma\App\ServiceManager\HttpInterceptors\HttpInterceptorManager;
 use Emma\Common\CallBackHandler\CallBackHandler;
 use Emma\Common\Singleton\Interfaces\SingletonInterface;
 use Emma\Di\Autowire\Autowire;
 use Emma\Di\Autowire\Interfaces\AutowireInterface;
 use Emma\Di\Container\ContainerManager;
 use Emma\Http\HttpManager;
+use Emma\Http\HttpStatus;
 use Emma\Http\Request\RequestInterface;
 use Emma\Http\Response\ResponseInterface;
 use Emma\Http\Router\Interfaces\RouteInterface;
 use Emma\Http\Router\Route\Route;
 
-/**
- * Class Core
- */
+
 class Core implements SingletonInterface
 {
-    use ContainerManager;
+    use ContainerManager, HttpInterceptorManager;
 
     /**
      * @var Config|null
@@ -29,11 +29,6 @@ class Core implements SingletonInterface
      * @var HttpManager
      */
     protected HttpManager $httpManager;
-
-    /**
-     * @var MvcEventManager|null
-     */
-    protected ?MvcEventManager $eventManager = null;
 
     /**
      * @var string
@@ -95,7 +90,7 @@ class Core implements SingletonInterface
      */
     public function handle(): ResponseInterface
     {
-        $route = $this->getContainer()->get(Constants::ROUTES);
+        $route = $this->getContainer()->has(Constants::ROUTES) ? $this->getContainer()->get(Constants::ROUTES) : null;
         /** @var ResponseInterface $response */
         $response = $this->getContainer()->get(Constants::RESPONSE);
         return ($route instanceof Route) ? $this->handleMiddleware($route) : $response;
@@ -118,32 +113,23 @@ class Core implements SingletonInterface
             //Check if request is a test 'Preflight' request
             return $response;
         }
-
+        
         /** @var AutowireInterface $autowire */
         $autowire = $this->getContainer()->get(Autowire::class);
-
         $diParams = $route->getParams();
         $callable = $autowire->autowire($route->getCallable(), $diParams);
 
-        $response = $this->getEventManager()->handleEvents(MvcEventManager::POST_CONTROLLER_EVENTS, $callable[0]);
-        if ($response instanceof ResponseInterface) {
-            return $response;
-        }
-
-        $response = $this->getEventManager()->handleEvents(MvcEventManager::PRE_ACTION_EVENTS, $callable[0]);
-        if ($response instanceof ResponseInterface) {
-            return $response;
+        /** @var HttpInterceptorInterface $interceptor */
+        $interceptors = $this->getInterceptors();
+        foreach($interceptors as $interceptor) {
+            $response = $interceptor->intercept($request, $response);
+            if ($response instanceof ResponseInterface && 
+                ($response->isRedirect() || $response->getResponseCode() !== HttpStatus::HTTP_OK)) {
+                return $response;
+            }
         }
 
         $response = CallBackHandler::get($callable, $diParams);
-        if ($response instanceof ResponseInterface && $response->isRedirect()) {
-            return $response;
-        }
-
-        $response1 = $this->getEventManager()->handleEvents(MvcEventManager::POST_ACTION_EVENTS, $callable[0]);
-        if ($response1 instanceof ResponseInterface) {
-            return $response1;
-        }
         return $response;
     }
 
@@ -180,24 +166,6 @@ class Core implements SingletonInterface
     public function setHttpManager(HttpManager $httpManager): Core
     {
         $this->httpManager = $httpManager;
-        return $this;
-    }
-
-    /**
-     * @return MvcEventManager
-     */
-    public function getEventManager(): MvcEventManager
-    {
-        return $this->eventManager;
-    }
-
-    /**
-     * @param MvcEventManager $eventManager
-     * @return Core
-     */
-    public function setEventManager(MvcEventManager $eventManager): static
-    {
-        $this->eventManager = $eventManager;
         return $this;
     }
 }

@@ -23,11 +23,11 @@ class CurlManager
         $defaultOption = new Property();
         $count = count($post);
         if (empty($url)) {
-            $defaultOption->add(CURLOPT_URL, $url)->add(CURLOPT_RETURNTRANSFER, true);
+            $defaultOption->register(CURLOPT_URL, $url)->register(CURLOPT_RETURNTRANSFER, true);
         }
         if ($count > 0) {
-            $defaultOption->add(CURLOPT_POST, $count);
-            $defaultOption->add(CURLOPT_POSTFIELDS, http_build_query($post, null, '&'));
+            $defaultOption->register(CURLOPT_POST, $count);
+            $defaultOption->register(CURLOPT_POSTFIELDS, http_build_query($post, "", '&'));
         }
         $this->setOptions($defaultOption);
     }
