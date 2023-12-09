@@ -28,8 +28,8 @@ use Emma\Http\Response\ResponseInterface;
  * @method Render render($name, array $params = array())
  * @method Output output($html)
  * @method ResponseCode responseCode($code = 200, $responseText = null)
- * @method ResponseInterface json(array $params = array(), int $status = 200)
- * @method ResponseInterface restResponse($data, $status = 200)
+ * @method ResponseInterface json(array $params = array(), int $httpStatus = 200)
+ * @method ResponseInterface restResponse(string $status, array|string|null $data, ?string $message = null, int $httpStatus = 200)
  * @method Template template($templateName)
  * @method CurlManager|\Emma\App\ServiceManager\CurlManager curl($url, $postData = array())
  */

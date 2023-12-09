@@ -17,24 +17,18 @@ class RestResponse extends ControllerPlugin
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function __invoke(array|string $data, int $status = 200): ResponseInterface
+    public function __invoke(string $status, array|string|null $data, ?string $message = null, int $httpStatus = 200): ResponseInterface
     {
-        return $this->send($data, $status);
-    }
-
-    /**
-     * @param array|string $data
-     * @param int $status
-     * @return ResponseInterface
-     * @throws \Exception
-     */
-    public function send(array|string $data, int $status = 200): ResponseInterface
-    {
-        $this->getController()->getResponse()->setResponseCode($status);
-        $_result = ($status != 200) ? array('status' => $status, 'error' => $data) : array_merge(['status' => $status], (array)$data);
-        $_result["result_type"] = "json";
-        $_result["timestamp"] = date('Y-m-d H:i:s');
-        return $this->getController()->json($_result);
+        $response = [
+            "status" => $status, 
+            "message" => $message, 
+            "data" => $data, 
+            "timestamp" => date('Y-m-d H:i:s')
+        ];
+        return $this->getController()
+            ->getResponse()
+            ->setResponseCode($httpStatus)
+            ->setJson($response);
     }
 
 }

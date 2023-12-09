@@ -1,13 +1,10 @@
 <?php
 namespace Emma\App\Controller;
 
-use Emma\App\Config;
 use Emma\App\Constants;
 use Emma\App\ErrorHandler\Exception\BaseException;
 use Emma\App\Log;
-use Emma\App\ServiceManager\Token;
 use Emma\Http\HttpStatus;
-use Emma\Http\Response\ResponseInterface;
 use Emma\Http\Router\Route\Route;
 
 /**
@@ -29,14 +26,6 @@ class RestController extends BaseController
      * Stores the input of the PUT request
      */
     protected ?string $file = null;
-
-    /**
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * @return $this
@@ -73,17 +62,6 @@ class RestController extends BaseController
                 throw new BaseException('Invalid Method', HttpStatus::HTTP_METHOD_NOT_ALLOWED);
         }
         return $this;
-    }
-
-
-    /**
-     * @return ResponseInterface
-     * TODO: Implement this method better with authentication token that will possibly be used with API request.
-     */
-    public function createSession(): ResponseInterface
-    {
-        $csrfSession = Token::generateCookie();
-        return $this->restResponse(["session" => $csrfSession]);
     }
 
     /**
