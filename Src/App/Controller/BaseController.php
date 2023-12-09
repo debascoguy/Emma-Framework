@@ -23,8 +23,7 @@ use Emma\Http\Response\ResponseInterface;
  * Email: debascoguy@gmail.com
  *
  * @method mixed|Request _request()
- * @method string|Url url($route = null, array $params = array())
- * @method Redirect redirect()
+ * @method Redirect redirect(string $url, array $queryParams = array())
  * @method Render render($name, array $params = array())
  * @method Output output($html)
  * @method ResponseCode responseCode($code = 200, $responseText = null)

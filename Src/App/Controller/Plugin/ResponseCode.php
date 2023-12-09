@@ -1,6 +1,7 @@
 <?php
 namespace Emma\App\Controller\Plugin;
 use Emma\Http\HttpStatus;
+use Emma\Http\Response\ResponseInterface;
 
 class ResponseCode extends ControllerPlugin
 {
@@ -10,8 +11,8 @@ class ResponseCode extends ControllerPlugin
      * @return void
      * @throws \Exception
      */
-    public function __invoke(int $code = HttpStatus::HTTP_OK, ?string $responseText = null)
+    public function __invoke(int $code = HttpStatus::HTTP_OK, ?string $responseText = null): ResponseInterface
     {
-        $this->getController()->getResponse()->setResponseCode($code)->setResponseText($responseText);
+        return $this->getController()->getResponse()->setResponseCode($code)->setResponseText($responseText);
     }
 }

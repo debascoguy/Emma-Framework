@@ -1,6 +1,7 @@
 <?php
 namespace Emma\App\Controller\Plugin;
 
+use Emma\Http\HttpStatus;
 use Emma\Http\Response\ResponseInterface;
 
 /**
@@ -17,7 +18,7 @@ class RestResponse extends ControllerPlugin
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function __invoke(string $status, array|string|null $data, ?string $message = null, int $httpStatus = 200): ResponseInterface
+    public function __invoke(string $status, array|string|null $data, ?string $message = null, int $httpStatus = HttpStatus::HTTP_OK): ResponseInterface
     {
         $response = [
             "status" => $status, 

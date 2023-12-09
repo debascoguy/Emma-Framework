@@ -6,14 +6,12 @@ use Emma\Http\Response\ResponseInterface;
 class Redirect extends ControllerPlugin
 {
     /**
-     * @param $routeString
-     * @param array $urlParams
+     * @param $url
      * @param array $queryParams
      * @return ResponseInterface
      */
-    public function toRoute($routeString, array $urlParams = array(), array $queryParams = array()): ResponseInterface
+    public function toRoute(string $url, array $queryParams = array()): ResponseInterface
     {
-        $url = $this->getController()->url($routeString, $urlParams);
         return $this->toUrl($url, $queryParams);
     }
 
