@@ -1,7 +1,7 @@
 <?php
 namespace Emma\App;
 
-use Emma\Countries\Singleton;
+use Emma\Common\Singleton\Singleton;
 
 /**
  * @Author: Ademola Aina
