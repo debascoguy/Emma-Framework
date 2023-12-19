@@ -1,0 +1,25 @@
+RewriteEngine On
+
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+#This checks for existing folders (-d) and files (-f) : If a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#Ignore all files with the following extension during redirecting
+RewriteCond %{REQUEST_FILENAME} !^/.(public|css|scss|gif|ico|jpg|jpeg|js|png|swf|txt)$
+RewriteCond %{REQUEST_URI} !^/.(public|css|scss|gif|ico|jpg|jpeg|js|png|swf|txt)$
+
+#METHOD 1 (SIMPLE & BEST): Redirect All Requests To index.php Using .htaccess
+RewriteRule ^(.*)$ index.php [QSA,L,NC]
+
+#METHOD 2: Redirect All Requests To index.php by re-writing the base
+#RewriteBase /
+#And this does the actual redirecting
+#RewriteRule ^(.*)$ /moneypally/index.php?/$1 [NC,L,QSA]
+
+#Then, Redirect /index.php to /  #(optional, but recommended if the request contains index.php)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index\.php [NC]
+RewriteRule ^index.php/?(.*)$ $1 [R=301,L]
+
