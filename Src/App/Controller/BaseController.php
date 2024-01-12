@@ -23,14 +23,14 @@ use Emma\Http\Response\ResponseInterface;
  * Email: debascoguy@gmail.com
  *
  * @method mixed|Request _request()
- * @method Redirect redirect(string $url, array $queryParams = array())
- * @method Render render($name, array $params = array())
+ * @method Redirect redirect(string $url, array $queryParams = [])
+ * @method Render render($name, array $params = [])
  * @method Output output($html)
  * @method ResponseCode responseCode($code = 200, $responseText = null)
- * @method ResponseInterface json(array $params = array(), int $httpStatus = 200)
+ * @method ResponseInterface json(array $params = [], int $httpStatus = 200)
  * @method ResponseInterface restResponse(string $status, array|string|null $data, ?string $message = null, int $httpStatus = 200)
  * @method Template template($templateName)
- * @method CurlManager|\Emma\App\ServiceManager\CurlManager curl($url, $postData = array())
+ * @method CurlManager|\Emma\App\ServiceManager\CurlManager curl($url, $postData = [])
  */
 abstract class BaseController {
 

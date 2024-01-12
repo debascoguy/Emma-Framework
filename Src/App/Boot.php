@@ -9,6 +9,7 @@ use Emma\App\ErrorHandler\ShutDownHandlerScheduler;
 use Emma\Di\Container\Container;
 use Emma\Http\HttpManager;
 use Emma\Http\RouteRegistry;
+use Emma\ORM\Connection\Connection;
 
 /**
  * @Author: Ademola Aina
@@ -89,7 +90,7 @@ class Boot
             $container->register(Constants::ROUTES, $routeMatch);
         }
 
-        DbConnection::getInstance()->connect([]);
+        Connection::getInstance()->setActiveConnection(DbConnection::createDefaultConnection());
 
         $coreConfig = $core->getConfig();
         $appConfig = $coreConfig->appConfig->getArrayCopy();
